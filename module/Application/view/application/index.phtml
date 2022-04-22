@@ -1,0 +1,35 @@
+<?php
+
+ $title = 'Employees';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <p>
+     <a href="<?php echo $this->url('application', array('action'=>'add'));?>">Add new employee</a>
+ </p>
+
+ <table class="table">
+ <tr>
+     <th>Name</th>
+     <th>Address</th>
+     <th>Phone</th>
+     <th>DOB</th>
+     <th>Image</th>
+     <th>&nbsp; Action</th>
+ </tr>
+ <?php foreach ($employees as $employee) : ?>
+ <tr> 
+     <td><?php echo $this->escapeHtml($employee->name);?></td>
+     <td><?php echo $this->escapeHtml($employee->address);?></td>
+     <td><?php echo $this->escapeHtml($employee->phone);?></td>
+     <td><?php echo $this->escapeHtml($employee->dob);?></td>
+     <td><?php echo $this->escapeHtml($employee->image);?></td>
+     <td>
+         <a href="<?php echo $this->url('employee',
+             array('action'=>'edit', 'id' => $employee->id));?>">Edit</a>
+         <a href="<?php echo $this->url('employee',
+             array('action'=>'delete', 'id' => $employee->id));?>">Delete</a>
+     </td>
+ </tr>
+ <?php endforeach; ?>
+ </table>

@@ -1,0 +1,137 @@
+<?php
+
+ $title = 'Employees';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <p>
+     <a href="<?php echo $this->url('Emp', array('action'=>'add'));?>">Add new Emp</a>
+ </p>
+<div class="col-md-12 row">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+        <form id="searchForm" name="searchForm" method="POST" class="row">
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <input type="text" class="form-control inpu1" placeholder="Search" id="searchName" name="searchName" style="width:100% ;padding-left:10px">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <input type="submit" name="submitSearch" id="submitSearch" value="Search" class="SA_button_save submit_search_button">
+            </div>
+        </form>
+    </div>
+    </div>
+ <table class="table">
+     <thead>
+ <tr>
+    <th>#</th>
+    <th>Name</th>
+     <th>Address</th>
+     <th>Email</th>
+     <th>Phone</th>
+     <th>DOB</th>
+     <th>Image</th>
+     <th>&nbsp; Action</th>
+ </tr>
+</thead>
+ <tbody id="paginationResults">
+ <?php 
+    $id = 1;
+    $resultCount = count($Emps);
+    if($resultCount > 0) {
+    foreach ($Emps as $employee) : ?>
+ <tr> 
+    <td><?php echo $this->escapeHtml($id);?></td>
+    <td><?php echo $this->escapeHtml($employee->name);?></td>
+     <td><?php echo $this->escapeHtml($employee->address);?></td>
+     <td><?php echo $this->escapeHtml($employee->email);?></td>
+     <td><?php echo $this->escapeHtml($employee->phone);?></td>
+     <td><?php echo $this->escapeHtml($employee->dob);?></td>
+     <td><img src="<?php echo $this->escapeHtml($employee->image);?>"></td>
+     <td>
+         <a href="<?php echo $this->url('Emp',
+             array('action'=>'edit', 'id' => $employee->id));?>">Edit</a>
+         <a href="<?php echo $this->url('Emp',
+             array('action'=>'delete', 'id' => $employee->id));?>">Delete</a>
+     </td>
+ </tr>
+ <?php 
+    $id++;
+endforeach; 
+    }
+    else{
+    ?>
+    <tr><td colspan="8" style="text-align: center;">Sorry, no records have been added.</td></tr>
+    <?php
+    }
+    ?>
+<?php if($resultCount >= 10){ ?>
+    <div id="div_pagi" style="float: right; width: 90px;">
+        <div id="demo2" class="jPaginate float-end" style="">
+            <div class="jPag-control-back jPag-control-back-1">
+                <span id="pagi_prev" class="jPag-sprevious-img" onclick="javascript:get_prev_RewardsList();"></span>
+            </div>
+            <div class="jPag-control-front jPag-control-front-1">
+                <span id="pagi_next" class="jPag-snext-img" onclick="javascript:get_next_RewardsList();"></span>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+ </tbody>
+ </table>
+
+<script>
+    $(document).ready(function () {
+		$('.next').click(function () {
+			$('.prev').show();
+		});
+	});
+	var offset_no = 1;
+	$(document).ready(function(){
+		$(".jPag-control-back").hide();
+	});
+
+     function loadPaginationData(offSet, limit)
+	{	
+		var searchName = $("#searchName").val();
+		var datastring = 'offSet=' + offSet + '&limit=' + limit + '&searchName="' + searchName + '"'; 
+		$.ajax({
+			type: "POST",
+			url: "<?php echo $this->url('Emp',
+             array('action'=>'paginationresults', 'id' => $employee->id));?>",
+			data: datastring,
+			dataType: "JSON",
+			complete: function (result) {
+				var jPagId = 1;
+				var paginationClass = "paginationResults";
+				var responseText = JSON.parse(result.responseText);
+                var response_data = responseText.paginationResults;
+                $("#" + paginationClass).html(response_data);
+                var totalcount = responseText.totalcount;
+                var count = responseText.count;		
+                $(".jPag-control-front").show();
+                $(".jPag-control-back").show();
+                if(count<10){
+                    $(".jPag-control-front").show();
+                    $(".jPag-control-back").show();
+                }
+                if(offSet == 1){
+                    $(".jPag-control-front").show();
+                    $(".jPag-control-back").show();
+                }
+                if(totalcount<=10 && offSet == 1){
+                    $(".jPag-control-front").show();
+                    $(".jPag-control-back").show();
+                }
+			}
+		});
+	}
+
+    $(document).ready(function(){
+        $("#searchForm").submit(function(e){
+			e.preventDefault();
+			loadPaginationData(offset_no,20);
+			return false;
+		});
+    });
+</script>

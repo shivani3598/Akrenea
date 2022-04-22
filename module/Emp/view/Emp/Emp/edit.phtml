@@ -1,0 +1,89 @@
+<?php
+
+ $title = 'Edit Employee';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+ <?php
+ $form = $this->form;
+ $form->setAttribute('action', $this->url(
+     'Emp',
+     array(
+         'action' => 'edit',
+         'id'     => $this->id,
+     )
+ ));
+ $form->prepare();
+ ?>
+
+<?php
+   $form->setAttribute('action', $this->url('Emp', array('action' => 'add')));
+   $form->prepare();
+
+   echo $this->form()->openTag($form);
+?>
+<table class="table">
+   <tr>
+       <td><label>Name</label></td>
+       <td>
+           <?php 
+               echo $this->formHidden($form->get('id'));
+               echo $this->formRow($form->get('name'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td><label>Address</label></td>
+       <td>
+           <?php 
+               echo $this->formRow($form->get('address'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td><label>Email</label></td>
+       <td>
+           <?php 
+               echo $this->formRow($form->get('email'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td><label>Phone</label></td>
+       <td>
+           <?php 
+               echo $this->formRow($form->get('phone'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td><label>DOB</label></td>
+       <td>
+           <?php 
+               echo $this->formRow($form->get('dob'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td><label>Image</label></td>
+       <td>
+           <?php 
+               echo $this->formFile($form->get('image'));
+           ?>
+       </td>
+   </tr>
+   <tr>
+       <td>
+           <?php 
+               echo $this->formSubmit($form->get('submit'));
+           ?>
+       </td>
+   </tr>
+</table>
+
+<?php
+echo $this->form()->closeTag();
+?>
+
+ 
